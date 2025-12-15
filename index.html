@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft 1.15.2 Alpha | Radmin VPN Szerver</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #0a0a0f;
+            --secondary-dark: #121218;
+            --card-dark: #1a1a24;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-purple: #8b5cf6;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-color: #2d3748;
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --gradient-primary: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --gradient-accent: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background: var(--gradient-primary);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Floating Elements */
+        .floating-element {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--gradient-accent);
+            opacity: 0.03;
+            z-index: -1;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .floating-element:nth-child(1) {
+            width: 400px;
+            height: 400px;
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 300px;
+            height: 300px;
+            bottom: 100px;
+            right: -50px;
+            animation-delay: 5s;
+        }
+
+        .floating-element:nth-child(3) {
+            width: 200px;
+            height: 200px;
+            top: 50%;
+            left: 10%;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-30px) rotate(120deg); }
+            66% { transform: translateY(30px) rotate(240deg); }
+        }
+
+        /* Header */
+        header {
+            padding: 40px 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+
+        .logo-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--accent-green);
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 40px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .status-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* Main Content */
+        main {
+            padding-bottom: 100px;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+            margin-bottom: 60px;
+        }
+
+        .card {
+            background: var(--card-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 40px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-accent);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-blue);
+            box-shadow: 0 20px 40px var(--shadow-color);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--gradient-accent);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Info Items */
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(45, 55, 72, 0.5);
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            background: rgba(59, 130, 246, 0.1);
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .info-value.highlight {
+            color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        /* Button */
+        .button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--gradient-accent);
+            color: white;
+            text-decoration: none;
+            padding: 18px 36px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .button-secondary {
+            background: transparent;
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .button-secondary:hover {
+            border-color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        /* Rules Section */
+        .rules-section {
+            margin-top: 80px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 60px;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--gradient-accent);
+            border-radius: 2px;
+        }
+
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .rule-card {
+            background: var(--card-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.3s ease;
+        }
+
+        .rule-card:hover {
+            border-color: var(--accent-purple);
+            transform: translateY(-4px);
+        }
+
+        .rule-number {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-accent);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: white;
+            margin-bottom: 24px;
+        }
+
+        .rule-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            line-height: 1.4;
+        }
+
+        .rule-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .rule-penalty {
+            color: var(--accent-red);
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 12px;
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-red);
+        }
+
+        /* Connection Guide */
+        .guide-steps {
+            counter-reset: step-counter;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .guide-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 24px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .guide-step::before {
+            counter-increment: step-counter;
+            content: counter(step-counter);
+            width: 56px;
+            height: 56px;
+            background: var(--gradient-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .guide-content h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .guide-content p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .credentials-box {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 16px;
+        }
+
+        .credential-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .credential-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .credential-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            min-width: 120px;
+        }
+
+        .credential-value {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-blue);
+            font-weight: 500;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--secondary-dark);
+            border-top: 1px solid var(--border-color);
+            padding: 60px 0 40px;
+            margin-top: 80px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-blue);
+        }
+
+        .copyright {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            padding-top: 40px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .slide-up {
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+
+            .logo {
+                font-size: 2.5rem;
+            }
+
+            .logo-subtitle {
+                font-size: 0.9rem;
+                letter-spacing: 2px;
+            }
+
+            .card {
+                padding: 30px 24px;
+            }
+
+            .grid-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .rules-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .guide-step {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .guide-step::before {
+                width: 48px;
+                height: 48px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .floating-element {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 2rem;
+            }
+
+            .card {
+                padding: 24px 20px;
+            }
+
+            .button {
+                padding: 16px 24px;
+            }
+
+            .credential-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--secondary-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-accent);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-blue);
+        }
+
+        /* Selection */
+        ::selection {
+            background: rgba(59, 130, 246, 0.3);
+            color: var(--text-primary);
+        }
+
+        /* Loading Animation */
+        .loading-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid transparent;
+            border-top-color: var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Animation -->
+    <div class="loading-animation" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Floating Background Elements -->
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+
+    <!-- Header -->
+    <header class="fade-in">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo">MINECRAFT 1.15.2</h1>
+                <div class="logo-subtitle">ALPHA SERVER • RADMIN VPN</div>
+                
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Server Info Section -->
+        <section class="slide-up">
+            <div class="grid-layout">
+                <!-- Connection Info Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <h2 class="card-title">Csatlakozási Adatok</h2>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Szerver IP Cím</span>
+                        <span class="info-value highlight">26.208.189.139:25565</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Radmin Hálózat Név</span>
+                        <span class="info-value">Minecraft 1.15.2 Szerver</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Jelszó</span>
+                        <span class="info-value">Almanach94</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Minecraft Verzió</span>
+                        <span class="info-value">1.15.2 (Java Edition)</span>
+                    </div>
+                    
+                    <a href="https://www.radmin-vpn.com/" target="_blank" class="button">
+                        <i class="fas fa-download"></i>
+                        Radmin VPN Letöltése
+                    </a>
+                </div>
+
+                <!-- Quick Start Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h2 class="card-title">Gyors Előkészítés</h2>
+                    </div>
+                    
+                    <div style="margin-bottom: 24px;">
+                        <h3 style="color: var(--text-primary); margin-bottom: 12px; font-size: 1.1rem;">1. Radmin VPN Telepítés</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">
+                            Töltsd le és telepítsd a Radmin VPN-t a fenti gomb segítségével.
+                        </p>
+                    </div>
+                    
+                    <div style="margin-bottom: 24px;">
+                        <h3 style="color: var(--text-primary); margin-bottom: 12px; font-size: 1.1rem;">2. Hálózathoz Csatlakozás</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">
+                            Használd a bal oldali hitelesítési adatokat a csatlakozáshoz.
+                        </p>
+                    </div>
+                    
+                    <div style="margin-bottom: 24px;">
+                        <h3 style="color: var(--text-primary); margin-bottom: 12px; font-size: 1.1rem;">3. Minecraft Indítás</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">
+                            Indítsd el a Minecraft 1.15.2-t és csatlakozz a szerver IP címére.
+                        </p>
+                    </div>
+                    
+                    <a href="https://discord.gg/bFBRNs9RJt" target="_blank" class="button button-secondary">
+                        <i class="fab fa-discord"></i>
+                        Discord Közösség
+                    </a>
+                </div>
+
+                <!-- Requirements Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h2 class="card-title">Követelmények</h2>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Minecraft Verzió</span>
+                        <span class="info-value">1.15.2</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Java Edition</span>
+                        <span class="info-value">Szükséges</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Radmin VPN</span>
+                        <span class="info-value">Kötelező</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Internet Kapcsolat</span>
+                        <span class="info-value">Stabil</span>
+                    </div>
+                    
+                    <div style="margin-top: 32px; padding: 20px; background: rgba(16, 185, 129, 0.1); border-radius: 12px; border-left: 4px solid var(--accent-green);">
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;">
+                            <i class="fas fa-info-circle" style="color: var(--accent-green); margin-right: 8px;"></i>
+                            A szerver kizárólag 1.15.2 verzióval kompatibilis. Kérjük, ellenőrizd a verziót csatlakozás előtt.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Connection Guide -->
+        <section class="slide-up" style="margin-top: 80px;">
+            <h2 class="section-title">Részletes Csatlakozási Útmutató</h2>
+            
+            <div class="guide-steps">
+                <div class="guide-step">
+                    <div class="guide-content">
+                        <h3>Radmin VPN Telepítése</h3>
+                        <p>Töltsd le a Radmin VPN-t a hivatalos weboldalról a fenti gomb segítségével. Kövesd a telepítő utasításait, és indítsd el az alkalmazást telepítés után.</p>
+                        
+                        <div class="credentials-box">
+                            <div class="credential-item">
+                                <span class="credential-label">Letöltési Link:</span>
+                                <span class="credential-value">https://www.radmin-vpn.com/</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="guide-step">
+                    <div class="guide-content">
+                        <h3>Hálózati Csatlakozás Beállítása</h3>
+                        <p>A Radmin VPN alkalmazásban navigálj a "Hálózat" menüpontra, majd válaszd a "Csatlakozás hálózathoz" opciót. Itt kell megadnod a hitelesítési adatokat.</p>
+                        
+                        <div class="credentials-box">
+                            <div class="credential-item">
+                                <span class="credential-label">Hálózat Név:</span>
+                                <span class="credential-value">Minecraft 1.15.2 Szerver</span>
+                            </div>
+                            <div class="credential-item">
+                                <span class="credential-label">Jelszó:</span>
+                                <span class="credential-value">Almanach94</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="guide-step">
+                    <div class="guide-content">
+                        <h3>Minecraft Beállítása</h3>
+                        <p>Indítsd el a Minecraft Launcher-t, válaszd ki a 1.15.2 verziót, majd indítsd el a játékot. A multiplayer menüben kattints az "Add Server" gombra.</p>
+                        
+                        <div class="credentials-box">
+                            <div class="credential-item">
+                                <span class="credential-label">Szerver IP:</span>
+                                <span class="credential-value">26.208.189.139:25565</span>
+                            </div>
+                            <div class="credential-item">
+                                <span class="credential-label">Szerver Név:</span>
+                                <span class="credential-value">Minecraft 1.15.2 Alpha</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="guide-step">
+                    <div class="guide-content">
+                        <h3>Csatlakozás és Játék</h3>
+                        <p>Miután mindent helyesen beállítottál, a szerver megjelenik a listában. Kattints rá a csatlakozáshoz, és élvezd a játékot közösségünkkel!</p>
+                        
+                        <div style="margin-top: 24px; text-align: center;">
+                            <a href="https://discord.gg/bFBRNs9RJt" target="_blank" class="button" style="width: auto; padding: 16px 32px;">
+                                <i class="fas fa-question-circle"></i>
+                                Segítség Kérése Discord-on
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Rules Section -->
+        <section class="rules-section slide-up">
+            <h2 class="section-title">Szerver Szabályzat</h2>
+            
+            <div class="rules-grid">
+                <!-- Discord Rules -->
+                <div class="rule-card">
+                    <div class="rule-number">1</div>
+                    <h3 class="rule-title">Discord Viselkedési Szabályok</h3>
+                    <p class="rule-description">Tiszteletben tartás, kulturált kommunikáció. Tilos a gyűlöletbeszéd, spam, reklám, és bármilyen sértő viselkedés.</p>
+                    <div class="rule-penalty">Büntetés: Figyelmeztetés → Mute → Kitiltás</div>
+                </div>
+                
+                <div class="rule-card">
+                    <div class="rule-number">2</div>
+                    <h3 class="rule-title">Személyes Adatok Védelme</h3>
+                    <p class="rule-description">Szigorúan tilos mások személyes adatainak közzététele vagy gyűjtése (doxxing).</p>
+                    <div class="rule-penalty">Büntetés: Azonnali végleges kitiltás</div>
+                </div>
+                
+                <div class="rule-card">
+                    <div class="rule-number">3</div>
+                    <h3 class="rule-title">Hang- és Szövegcsatornák</h3>
+                    <p class="rule-description">Használd a megfelelő csatornákat a kommunikációhoz. Tilos a felesleges hangzavar vagy off-topic beszélgetés.</p>
+                    <div class="rule-penalty">Büntetés: Csatorna tiltás → Mute</div>
+                </div>
+                
+                <!-- Minecraft Rules -->
+                <div class="rule-card">
+                    <div class="rule-number">4</div>
+                    <h3 class="rule-title">Csalás és Hack Tilalma</h3>
+                    <p class="rule-description">Bármilyen csalóprogram, hack, exploit vagy unfair advantage használata szigorúan tilos.</p>
+                    <div class="rule-penalty">Büntetés: Végleges szerver kitiltás</div>
+                </div>
+                
+                <div class="rule-card">
+                    <div class="rule-number">5</div>
+                    <h3 class="rule-title">Griefing és Lopás</h3>
+                    <p class="rule-description">Más játékosok építményeinek tönkretétele vagy tulajdonának ellopása nem megengedett.</p>
+                    <div class="rule-penalty">Büntetés: Visszaállítás → Ideiglenes kitiltás → Végleges kitiltás</div>
+                </div>
+                
+                <div class="rule-card">
+                    <div class="rule-number">6</div>
+                    <h3 class="rule-title">Lag és Teljesítmény</h3>
+                    <p class="rule-description">Tilos a szerver teljesítményét jelentősen rontó farmok vagy mechanizmusok építése.</p>
+                    <div class="rule-penalty">Büntetés: Farm eltávolítás → Figyelmeztetés → Kitiltás</div>
+                </div>
+                
+                <!-- Radmin Rules -->
+                <div class="rule-card">
+                    <div class="rule-number">7</div>
+                    <h3 class="rule-title">Radmin Hozzáférés Biztonság</h3>
+                    <p class="rule-description">A Radmin hozzáférési adatok megosztása külsősökkel szigorúan tilos.</p>
+                    <div class="rule-penalty">Büntetés: Azonnali végleges kitiltás minden platformról</div>
+                </div>
+                
+                <div class="rule-card">
+                    <div class="rule-number">8</div>
+                    <h3 class="rule-title">Közösségi Viselkedés</h3>
+                    <p class="rule-description">Tartsd tiszteletben a többi játékost. A toxic viselkedés, zaklatás nem tolerálható.</p>
+                    <div class="rule-penalty">Büntetés: Figyelmeztetés → Ideiglenes kitiltás → Végleges kitiltás</div>
+                </div>
+                
+                <div class="rule-card">
+                    <div class="rule-number">9</div>
+                    <h3 class="rule-title">Admin Döntések</h3>
+                    <p class="rule-description">Az adminisztrátorok döntései véglegesek. A szabályzat értelmezése az ő hatáskörük.</p>
+                    <div class="rule-description">A szabályzat ismeretének hiánya nem mentesít a felelősség alól.</p>
+                </div>
+            </div>
+            
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3>Minecraft Szerver</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Főoldal</a></li>
+                        <li><a href="#">Szerver Infó</a></li>
+                        <li><a href="#">Szabályzat</a></li>
+                        <li><a href="#">Gyakori Kérdések</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Kapcsolat</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://discord.gg/bFBRNs9RJt" target="_blank">Discord Közösség</a></li>
+                        <li><a href="#">Adminisztrátorok</a></li>
+                        <li><a href="#">Játékos Segítség</a></li>
+                        <li><a href="#">Jelentés Küldése</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Letöltések</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://www.radmin-vpn.com/" target="_blank">Radmin VPN</a></li>
+                        <li><a href="https://www.minecraft.net" target="_blank">Minecraft</a></li>
+                        <li><a href="#">Resource Pack</a></li>
+                        <li><a href="#">Hasznos Linkek</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Jogi Információk</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Adatvédelem</a></li>
+                        <li><a href="#">Felhasználási Feltételek</a></li>
+                        <li><a href="#">Cookie Szabályzat</a></li>
+                        <li><a href="#">Jogi Nyilatkozat</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>© 2024 Minecraft 1.15.2 Alpha Szerver. Minden jog fenntartva.</p>
+                <p style="margin-top: 8px; font-size: 0.8rem; color: var(--text-muted);">
+                    Minecraft egy Mojang AB védjegye. Ez nem egy hivatalos Minecraft szerver.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Loading animation removal
+        window.addEventListener('load', function() {
+            const loading = document.getElementById('loading');
+            loading.style.opacity = '0';
+            setTimeout(() => {
+                loading.style.display = 'none';
+            }, 500);
+        });
+
+        // Animate elements on scroll
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.slide-up');
+            
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (elementTop < windowHeight - 100) {
+                    element.style.animation = 'slideUp 0.6s ease-out forwards';
+                }
+            });
+        }
+
+        // Initial animation
+        document.addEventListener('DOMContentLoaded', function() {
+            animateOnScroll();
+            
+            // Animate cards with delay
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+            
+            // Animate rule cards with delay
+            const ruleCards = document.querySelectorAll('.rule-card');
+            ruleCards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+
+        // Scroll event listener
+        window.addEventListener('scroll', animateOnScroll);
+
+        // Copy IP address functionality
+        document.querySelectorAll('.info-value').forEach(element => {
+            if (element.textContent.includes('26.208.189.139')) {
+                element.style.cursor = 'pointer';
+                element.title = 'Kattints a másoláshoz';
+                
+                element.addEventListener('click', function() {
+                    const textToCopy = this.textContent;
+                    navigator.clipboard.writeText(textToCopy).then(() => {
+                        const originalText = this.textContent;
+                        this.textContent = 'Másolva!';
+                        this.style.color = '#10b981';
+                        
+                        setTimeout(() => {
+                            this.textContent = originalText;
+                            this.style.color = '';
+                        }, 2000);
+                    });
+                });
+            }
+        });
+
+        // Theme toggle (optional - can be removed)
+        const themeToggle = document.createElement('button');
+        themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+        themeToggle.style.position = 'fixed';
+        themeToggle.style.bottom = '20px';
+        themeToggle.style.right = '20px';
+        themeToggle.style.width = '50px';
+        themeToggle.style.height = '50px';
+        themeToggle.style.borderRadius = '50%';
+        themeToggle.style.background = 'var(--gradient-accent)';
+        themeToggle.style.color = 'white';
+        themeToggle.style.border = 'none';
+        themeToggle.style.cursor = 'pointer';
+        themeToggle.style.zIndex = '1000';
+        themeToggle.style.boxShadow = '0 4px 15px var(--shadow-color)';
+        themeToggle.style.display = 'flex';
+        themeToggle.style.alignItems = 'center';
+        themeToggle.style.justifyContent = 'center';
+        themeToggle.style.fontSize = '1.2rem';
+        
+        themeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('light-mode');
+            const icon = this.querySelector('i');
+            
+            if (document.body.classList.contains('light-mode')) {
+                icon.className = 'fas fa-sun';
+                document.documentElement.style.setProperty('--primary-dark', '#f8fafc');
+                document.documentElement.style.setProperty('--secondary-dark', '#f1f5f9');
+                document.documentElement.style.setProperty('--card-dark', '#ffffff');
+                document.documentElement.style.setProperty('--text-primary', '#0f172a');
+                document.documentElement.style.setProperty('--text-secondary', '#475569');
+                document.documentElement.style.setProperty('--border-color', '#e2e8f0');
+            } else {
+                icon.className = 'fas fa-moon';
+                document.documentElement.style.setProperty('--primary-dark', '#0a0a0f');
+                document.documentElement.style.setProperty('--secondary-dark', '#121218');
+                document.documentElement.style.setProperty('--card-dark', '#1a1a24');
+                document.documentElement.style.setProperty('--text-primary', '#f8fafc');
+                document.documentElement.style.setProperty('--text-secondary', '#94a3b8');
+                document.documentElement.style.setProperty('--border-color', '#2d3748');
+            }
+        });
+        
+        document.body.appendChild(themeToggle);
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Floating elements interaction
+        document.querySelectorAll('.floating-element').forEach(element => {
+            element.addEventListener('mouseenter', function() {
+                this.style.animationPlayState = 'paused';
+                this.style.transform = 'scale(1.1)';
+            });
+            
+            element.addEventListener('mouseleave', function() {
+                this.style.animationPlayState = 'running';
+                this.style.transform = '';
+            });
+        });
+
+        updateClock();
+        setInterval(updateClock, 60000); // Update every minute
+
+        // Add particle effect to buttons on hover
+        document.querySelectorAll('.button').forEach(button => {
+            button.addEventListener('mouseenter', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const particle = document.createElement('span');
+                particle.style.position = 'absolute';
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.width = '10px';
+                particle.style.height = '10px';
+                particle.style.background = 'rgba(255, 255, 255, 0.5)';
+                particle.style.borderRadius = '50%';
+                particle.style.pointerEvents = 'none';
+                particle.style.transform = 'scale(0)';
+                particle.style.animation = 'particleOut 0.6s ease-out forwards';
+                
+                this.appendChild(particle);
+                
+                setTimeout(() => {
+                    particle.remove();
+                }, 600);
+            });
+        });
+
+        // Add particle animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes particleOut {
+                0% {
+                    transform: scale(0);
+                    opacity: 1;
+                }
+                100% {
+                    transform: scale(3);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
